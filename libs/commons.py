@@ -26,7 +26,7 @@ collection = db["questions"]
 
 
 # General bits
-MAX_SECTION_LEN = 750
+MAX_SECTION_LEN = 1250
 SEPARATOR = "\n* "
 ENCODING = "cl100k_base"  # encoding for text-embedding-ada-002
 encoding = tiktoken.get_encoding(ENCODING)
@@ -176,9 +176,9 @@ def generate_response(appName, DEFQUESTION, header,query,df, document_embeddings
         answer, most_relevant_document_sections, chosen_sections, chosen_sections_indexes = answer_query_with_context(appName,query,header, df, document_embeddings, style)
         if len(chosen_sections_indexes):
             st.sidebar.write("### Source(s)\n")
-            for ix, row in df[df.hash.isin(chosen_sections_indexes)].iterrows():
-                st.sidebar.write("* __"+row.dlv+"__: "+row.section)
-                dlvs.append(row.dlv)
+            for item in list(set(list(df[df.hash.isin(chosen_sections_indexes)].dlv.unique()))):
+                st.sidebar.write("* __"+item+"__")
+                dlvs.append(item)
         else:
             st.sidebar.write("### No source found")
         answer = answer + "\n(Source(s): "+", ".join(list(set(dlvs)))+".)"
